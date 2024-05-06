@@ -80,6 +80,16 @@ impl Peer {
         self.send(body).await
     }
 
+    pub async fn request_block(
+        &self,
+        height: u32,
+        include_transaction_block: bool
+    ) -> Result<FullBlock, Error<()>> {
+        let body = RequestBlock { height, include_transaction_block };
+        let response: RespondBlock = self.request_or_reject(body).await?;
+        Ok(response.block)
+    }
+
     pub async fn request_puzzle_and_solution(
         &self,
         coin_id: Bytes32,
